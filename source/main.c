@@ -15,6 +15,7 @@
 #include "task.h"
 #include "queue.h"
 #include "timers.h"
+#include "semphr.h"
 
 
 /* Freescale includes. */
@@ -35,14 +36,18 @@
 #define HIGHEST_PRIORITY 			(configMAX_PRIORITIES - 1)
 #define TOF1_SENSOR_TASK_PRIORITY 	(HIGHEST_PRIORITY)
 #define TOF2_SENSOR_TASK_PRIORITY 	(HIGHEST_PRIORITY)
-#define WARNING_TASK_PRIORITY 		(HIGHEST_PRIORITY - 1)
+#define TOF1_PROCESS_TASK_PRIORITY 	(HIGHEST_PRIORITY - 1)
+#define TOF2_PROCESS_TASK_PRIORITY 	(HIGHEST_PRIORITY - 1)
+#define WARNING_TASK_PRIORITY 		(HIGHEST_PRIORITY - 2)
+
+#define TOF_RANGE_Q_SIZE		(10)
 
 
 /* Application specific variables*/
 typedef struct {
 	uint8_t tof_id;
 	e_proximity_t e_proximity;
-	uint16_t proximity_arr[5];
+	QueueHandle_t range_val;
 } tof_sensor_data_t;
 
 
@@ -50,20 +55,21 @@ typedef struct {
 tof_sensor_data_t tof_sensor_data[] = {
 		{
 				.tof_id = VL53L0X_IDX_FIRST,
-				.e_proximity = PROXIMITY_SAFE,
-				.proximity_arr = {250, 200, 160, 130, 100}
+				.e_proximity = PROXIMITY_SAFE
 		}
 };
 
 
 /* Task prototypes */
 static void tof_ranging_task(void *pvParameters);
+static void tof_process_task(void *pvParameters);
 static void warning_task(void *pvParameters);
 
 
 /* Task handles */
-TaskHandle_t warning_handle;
 TaskHandle_t tof_ranging_handle;
+TaskHandle_t tof_process_handle;
+TaskHandle_t warning_handle;
 
 
 /**
@@ -80,17 +86,26 @@ int main(void)
 	buzzer_init();
 	tof_init();
 
+	/* Create queue to accumulate range data and then give it for processing */
+	tof_sensor_data[0].range_val = xQueueCreate(TOF_RANGE_Q_SIZE, sizeof(uint16_t));
+
 	/* Creating RTOS tasks for ranging */
-	xTaskCreate(warning_task, "Warning", configMINIMAL_STACK_SIZE + 10, NULL, TOF1_SENSOR_TASK_PRIORITY, &warning_handle);
-	xTaskCreate(tof_ranging_task, "ToF Ranging", configMINIMAL_STACK_SIZE + 10, NULL, WARNING_TASK_PRIORITY, &tof_ranging_handle);
+	xTaskCreate(tof_ranging_task, "ToF Ranging", configMINIMAL_STACK_SIZE + 10, NULL,
+			WARNING_TASK_PRIORITY, &tof_ranging_handle);
+
+	xTaskCreate(tof_process_task, "ToF Processing", configMINIMAL_STACK_SIZE + 10, NULL,
+			WARNING_TASK_PRIORITY, &tof_process_handle);
+
+	xTaskCreate(warning_task, "Warning", configMINIMAL_STACK_SIZE + 10, NULL,
+			TOF1_SENSOR_TASK_PRIORITY, &warning_handle);
+
 	vTaskStartScheduler();
 	for (;;);
 }
 
 
 /*******************************************************************************
- * RTOS task for ranging using the ToF sensor. Based on the range data sets the
- * prximity which will be used by the other tasks to take respective action.
+ * RTOS task for ranging using the ToF sensor.
  *
  * @param
  *  *pvParameters	Pointer to the parameters used by the RTOS task.
@@ -98,31 +113,78 @@ int main(void)
  ******************************************************************************/
 static void tof_ranging_task(void *pvParameters)
 {
-	uint16_t range;
-	for (;;)
+	uint16_t range = VL53L0X_OUT_OF_RANGE;
+	uint16_t last_range = VL53L0X_OUT_OF_RANGE;
+
+	while(1)
 	{
 		range = tof_get_range(tof_sensor_data[0].tof_id);
 
-		if (range != VL53L0X_OUT_OF_RANGE) {
-			PRINTF("\n\rRange: %u",range);
-			tof_sensor_data[0].e_proximity = PROXIMITY_SAFE;
-			for (int i = 4; i >= 0; i--) {
-				if (range < tof_sensor_data[0].proximity_arr[i]) {
-					tof_sensor_data[0].e_proximity = (e_proximity_t) (i + 1);
-					break;
-				}
-			}
+		if (range != VL53L0X_OUT_OF_RANGE)
+		{
+			PRINTF("\n\rR: %u",range);
 
-			if (tof_sensor_data[0].e_proximity != PROXIMITY_SAFE) {
+			/* Add valid range to queue */
+			if (xQueueSend(tof_sensor_data[0].range_val, (void*)&range, 0) != pdTRUE)
+				PRINTF("Queue is full");
+
+			last_range = range;
+		}
+		else
+		{
+			/* Add VL53L0X_OUT_OF_RANGE data to queue to indicate process task
+			 * that ToF giving out-of-range values so that it can stop the buzzer */
+			if (last_range != VL53L0X_OUT_OF_RANGE) {
+				last_range = VL53L0X_OUT_OF_RANGE;
+				if (xQueueSend(tof_sensor_data[0].range_val, (void*)&last_range, 0) != pdTRUE)
+					PRINTF("Queue is full");
+			}
+		}
+
+		vTaskDelay(10 / portTICK_PERIOD_MS);
+	}
+}
+
+
+/*******************************************************************************
+ * Processes the range data and sets the proximity which will be used by the
+ * other tasks to take respective action.
+ *
+ * @param
+ *  *pvParameters	Pointer to the parameters used by the RTOS task.
+ *
+ ******************************************************************************/
+static void tof_process_task(void *pvParameters)
+{
+	uint16_t range_val;
+	e_proximity_t e_proximity = PROXIMITY_SAFE;
+
+	while (1)
+	{
+		if (xQueueReceive(tof_sensor_data[0].range_val, (void*)&range_val, portMAX_DELAY) == pdTRUE)
+		{
+			PRINTF("\n\rP: %u", range_val);
+
+			if (range_val < proximity_slots[PROXIMITY_QUITE_CLOSE])
+				e_proximity = PROXIMITY_QUITE_CLOSE;
+			else if (range_val < proximity_slots[PROXIMITY_CLOSE])
+				e_proximity = PROXIMITY_CLOSE;
+			else if (range_val < proximity_slots[PROXIMITY_MID])
+				e_proximity = PROXIMITY_MID;
+			else if (range_val < proximity_slots[PROXIMITY_FAR])
+				e_proximity = PROXIMITY_FAR;
+			else if (range_val < proximity_slots[PROXIMITY_QUITE_FAR])
+				e_proximity = PROXIMITY_QUITE_FAR;
+			else
+				e_proximity = PROXIMITY_SAFE;
+
+			tof_sensor_data[0].e_proximity = e_proximity;
+
+			if (e_proximity != PROXIMITY_SAFE) {
 				if (eTaskGetState(warning_handle) == eSuspended)
 					vTaskResume(warning_handle);
 			}
 		}
-		else {
-			tof_sensor_data[0].e_proximity = PROXIMITY_SAFE;
-		}
-
-		vTaskDelay(100 / portTICK_PERIOD_MS);
 	}
 }
 
@@ -138,25 +200,33 @@ static void tof_ranging_task(void *pvParameters)
 static void warning_task(void *pvParameters)
 {
 	e_proximity_t last_e_proximity = PROXIMITY_SAFE;
+	e_proximity_t e_proximity = PROXIMITY_SAFE;
 
 	while (1)
 	{
-		if (last_e_proximity != tof_sensor_data[0].e_proximity)
+		e_proximity = tof_sensor_data[0].e_proximity;
+
+		if (e_proximity == PROXIMITY_SAFE)
 		{
-			last_e_proximity = tof_sensor_data[0].e_proximity;
+			PRINTF("\n\rStopped");
 
-			if (last_e_proximity ==  PROXIMITY_SAFE) {
-				buzzer_stop();
-				vTaskSuspend(NULL);
-			}
-			else {
-				buzzer_setup(last_e_proximity);
-			}
+			last_e_proximity = PROXIMITY_SAFE;
+			buzzer_stop();
+			vTaskSuspend(NULL);
 		}
+		else
+		{
+			PRINTF("\n\rPlaying");
 
-		buzzer_start();
-		vTaskDelay(get_buzzer_on_period() / portTICK_PERIOD_MS);
-		buzzer_stop();
-		vTaskDelay(get_buzzer_off_period() / portTICK_PERIOD_MS);
+			if (e_proximity !=  last_e_proximity)
+				buzzer_setup(e_proximity);
+
+			buzzer_start();
+			vTaskDelay(get_buzzer_on_period() / portTICK_PERIOD_MS);
+			buzzer_stop();
+			vTaskDelay(get_buzzer_off_period() / portTICK_PERIOD_MS);
+
+			last_e_proximity = e_proximity;
+		}
 	}
 }
