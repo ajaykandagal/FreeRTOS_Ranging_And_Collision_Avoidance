@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @file	main.c
- * @brief 	This is an freeRTOS based application for ranging using vl53l0x ToF
+ * @brief 	This is an FreeRTOS based application for ranging using vl53l0x ToF
  * 			sensor. The application measures the distance from an obstacle using
  * 			ToF sensor and based on the proximity turns on/off the buzzer.
  *

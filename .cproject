@@ -291,7 +291,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.782967764" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level"/>
 								<option id="com.crt.advproject.link.fpu.614742245" name="Floating point" superClass="com.crt.advproject.link.fpu"/>
 								<option id="com.crt.advproject.link.manage.1050254480" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.1459685632" name="Linker script" superClass="com.crt.advproject.link.script" value="RTOS_Ranging_rtos_examples_freertos_hello_Debug.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.1459685632" name="Linker script" superClass="com.crt.advproject.link.script" value="&quot;FreeRTOS_Ranging_And_Collision_Avoidance_Debug.ld&quot;" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.1396928847" name="Script path" superClass="com.crt.advproject.link.scriptdir"/>
 								<option id="com.crt.advproject.link.crpenable.208842266" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable"/>
 								<option id="com.crt.advproject.link.flashconfigenable.615122304" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" value="true" valueType="boolean"/>
@@ -507,6 +507,7 @@
 								<option id="com.crt.advproject.gcc.specs.33142618" name="Specs" superClass="com.crt.advproject.gcc.specs" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gcc.config.908946699" name="Obsolete (Config)" superClass="com.crt.advproject.gcc.config" useByScannerDiscovery="false"/>
 								<option id="com.crt.advproject.gcc.store.1696248799" name="Obsolete (Store)" superClass="com.crt.advproject.gcc.store" useByScannerDiscovery="false"/>
+								<option id="com.crt.advproject.gcc.exe.release.option.optimization.level.277960572" superClass="com.crt.advproject.gcc.exe.release.option.optimization.level"/>
 								<inputType id="com.crt.advproject.compiler.input.1051276578" superClass="com.crt.advproject.compiler.input"/>
 							</tool>
 							<tool id="com.crt.advproject.gas.exe.release.469745176" name="MCU Assembler" superClass="com.crt.advproject.gas.exe.release">
@@ -531,6 +532,7 @@
 								<option id="com.crt.advproject.gas.specs.1809223060" name="Specs" superClass="com.crt.advproject.gas.specs"/>
 								<option id="com.crt.advproject.gas.config.163153375" name="Obsolete (Config)" superClass="com.crt.advproject.gas.config"/>
 								<option id="com.crt.advproject.gas.store.959215341" name="Obsolete (Store)" superClass="com.crt.advproject.gas.store"/>
+								<option id="com.crt.advproject.gas.debug.1092048421" superClass="com.crt.advproject.gas.debug"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.239868554" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="com.crt.advproject.assembler.input.417876136" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
 							</tool>
@@ -625,7 +627,7 @@
 								<option id="com.crt.advproject.link.gcc.lto.optmization.level.853" name="Link-time optimization level" superClass="com.crt.advproject.link.gcc.lto.optmization.level"/>
 								<option id="com.crt.advproject.link.fpu.393822539" name="Floating point" superClass="com.crt.advproject.link.fpu"/>
 								<option id="com.crt.advproject.link.manage.806324464" name="Manage linker script" superClass="com.crt.advproject.link.manage" value="true" valueType="boolean"/>
-								<option id="com.crt.advproject.link.script.1730600599" name="Linker script" superClass="com.crt.advproject.link.script" value="RTOS_Ranging_rtos_examples_freertos_hello_Release.ld" valueType="string"/>
+								<option id="com.crt.advproject.link.script.1730600599" name="Linker script" superClass="com.crt.advproject.link.script" value="&quot;FreeRTOS_Ranging_And_Collision_Avoidance_Release.ld&quot;" valueType="string"/>
 								<option id="com.crt.advproject.link.scriptdir.1791635298" name="Script path" superClass="com.crt.advproject.link.scriptdir"/>
 								<option id="com.crt.advproject.link.crpenable.766669413" name="Enable automatic placement of Code Read Protection field in image" superClass="com.crt.advproject.link.crpenable"/>
 								<option id="com.crt.advproject.link.flashconfigenable.1544527234" name="Enable automatic placement of Flash Configuration field in image" superClass="com.crt.advproject.link.flashconfigenable" value="true" valueType="boolean"/>
@@ -655,6 +657,7 @@
 								<option id="com.crt.advproject.miscellaneous.pvHeapLimit.1345359163" name="Maximum extent of heap" superClass="com.crt.advproject.miscellaneous.pvHeapLimit"/>
 								<option id="com.crt.advproject.debugger.security.nonsecureimageenable.1404067683" name="Enable pre-programming of Non-Secure Image" superClass="com.crt.advproject.debugger.security.nonsecureimageenable"/>
 								<option id="com.crt.advproject.debugger.security.nonsecureimage.365482576" name="Non-Secure Project" superClass="com.crt.advproject.debugger.security.nonsecureimage"/>
+								<option id="com.crt.advproject.linkserver.debug.prevent.release.2071447255" superClass="com.crt.advproject.linkserver.debug.prevent.release"/>
 							</tool>
 						</toolChain>
 					</folderInfo>
