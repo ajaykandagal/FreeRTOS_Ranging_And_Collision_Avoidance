@@ -6,7 +6,8 @@
  *
  * @project	Range Sensing and Collision Avoidance Using ToF Sensor on FreeRTOS
  * @author 	Ajaykumar Kandagal, ajka9053@colorado.edu
- * @data 	Dec 08, 2022
+ * @data 	Dec 06, 2022
+ *
  ******************************************************************************/
 
 
@@ -138,7 +139,7 @@ static void tof_ranging_task(void *pvParameters)
 
 			/* Add valid range to queue */
 			if (xQueueSend(tof_sensor_data[0].range_val, (void*)&range, 0) != pdTRUE)
-				PRINTF("Queue is full");
+				PRINTF("\n\rQueue is full");
 
 			last_range = range;
 		}
@@ -150,7 +151,7 @@ static void tof_ranging_task(void *pvParameters)
 			{
 				last_range = VL53L0X_OUT_OF_RANGE;
 				if (xQueueSend(tof_sensor_data[0].range_val, (void*)&last_range, 0) != pdTRUE)
-					PRINTF("Queue is full");
+					PRINTF("\n\rQueue is full");
 			}
 		}
 
@@ -178,8 +179,8 @@ static void tof_process_task(void *pvParameters)
 		{
 			PRINTF("\n\rP: %u", range_val);
 
-			if (range_val < proximity_slots[PROXIMITY_QUITE_CLOSE])
-				e_proximity = PROXIMITY_QUITE_CLOSE;
+			if (range_val < proximity_slots[PROXIMITY_TOO_CLOSE])
+				e_proximity = PROXIMITY_TOO_CLOSE;
 			else if (range_val < proximity_slots[PROXIMITY_CLOSE])
 				e_proximity = PROXIMITY_CLOSE;
 			else if (range_val < proximity_slots[PROXIMITY_MID])

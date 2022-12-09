@@ -1,11 +1,14 @@
 /*******************************************************************************
  * @file	buzzer.h
- * @brief 	This file contains functions to initialize TPM0 to generate a tone
+ * @brief	This file contains functions to initialize TPM0 to generate a tone
  * 			frequency based on ranging data which will be used to drive the
  * 			buzzer.
  *
- * @author 	Ajaykumar Kandagal, ajka9053@colorado.edu
- * @data 	Dec 03, 2022
+ * @author	Ajaykumar Kandagal, ajka9053@colorado.edu
+ * @data	Dec 03, 2022
+ *
+ * @editor	Dec 09, 2022, Ajay Kandagal, ajka9053@colorado.edu
+ * @change	Fixed the buzzer since the proximity enum values were rearranged.
  ******************************************************************************/
 #include "MKL25Z4.h"
 #include "buzzer.h"
@@ -64,10 +67,10 @@ void buzzer_setup(e_proximity_t e_proximity)
 
 	g_buzzer_on_period = 0;
 
-	if (e_proximity == PROXIMITY_SAFE || e_proximity > PROXIMITY_QUITE_CLOSE)
+	if (e_proximity == PROXIMITY_SAFE)
 		return;
 
-	g_buzzer_on_period = e_proximity * 100;
+	g_buzzer_on_period = (PROXIMITY_SAFE - e_proximity) * 100;
 
 	uint32_t tmp_mod_val =  ((CPU_CLOCK_FREQ / TPM_PRESCALER_DIV_VAL) / g_tone_frequencies[0]) - 1;
 

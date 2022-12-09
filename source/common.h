@@ -3,7 +3,7 @@
  * @brief 	This file contains common definitions.
  *
  * @author 	Ajaykumar Kandagal, ajka9053@colorado.edu
- * @data 	Dec 07, 2022
+ * @data 	Dec 09, 2022
  ******************************************************************************/
 #ifndef COMMON_H_
 #define COMMON_H_
@@ -21,7 +21,7 @@
 
 
 typedef enum {
-	PROXIMITY_QUITE_CLOSE = 0,
+	PROXIMITY_TOO_CLOSE = 0,
 	PROXIMITY_CLOSE,
 	PROXIMITY_MID,
 	PROXIMITY_FAR,
@@ -30,7 +30,7 @@ typedef enum {
 } e_proximity_t;
 
 
-static const uint16_t proximity_slots[TOF_PROXIMITY_SLOTS] = {100, 130, 150, 180, 200};
+static const uint16_t proximity_slots[TOF_PROXIMITY_SLOTS] = {100, 150, 200, 250, 300};
 
 
 #endif /* COMMON_H_ */

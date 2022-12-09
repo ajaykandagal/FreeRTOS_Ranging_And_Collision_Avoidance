@@ -1,6 +1,6 @@
 /*******************************************************************************
  * @file	vl53l0x.h
- * @brief 	This code is heavily inspired from Niklas' code. STM doesn't provide
+ * @brief	This code is heavily inspired from Niklas' code. STM doesn't provide
  * 			register mapping documentation for vl5310x ToF sensor and instead
  * 			they have given API library which has to be modified for platform
  * 			specific I2C bus implementation. The library is results in quite
@@ -9,10 +9,10 @@
  * 			ranging.
  *
  * @author	Niklas Nilsson
- * @link    https://github.com/artfulbytes/vl6180x_vl53l0x_msp430.git
+ * @link	https://github.com/artfulbytes/vl6180x_vl53l0x_msp430.git
  *
- * @editor 	Dec 01, 2022, Ajay Kandagal, ajaykandagal94@gmail.com
- * @change 	Functions have been modified to handle a single ToF sensor based on
+ * @editor	Dec 01, 2022, Ajay Kandagal, ajaykandagal94@gmail.com
+ * @change	Functions have been modified to handle a single ToF sensor based on
  * 			address passed. A bug was observed while taking single measurement
  * 			and has been corrected as per STM's API documentation.
  *

@@ -1,11 +1,11 @@
 /*******************************************************************************
  * @file	buzzer.h
- * @brief 	This file contains functions to initialize TPM0 to generate a tone
+ * @brief	This file contains functions to initialize TPM0 to generate a tone
  * 			frequency based on ranging data which will be used to drive the
  * 			buzzer.
  *
- * @author 	Ajaykumar Kandagal, ajka9053@colorado.edu
- * @data 	Dec 03, 2022
+ * @author	Ajaykumar Kandagal, ajka9053@colorado.edu
+ * @data	Dec 03, 2022
  ******************************************************************************/
 #ifndef BUZZER_H_
 #define BUZZER_H_
