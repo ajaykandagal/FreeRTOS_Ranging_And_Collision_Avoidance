@@ -9,6 +9,7 @@
  *
  * @editor	Dec 09, 2022, Ajay Kandagal, ajka9053@colorado.edu
  * @change	Fixed the buzzer since the proximity enum values were rearranged.
+ *
  ******************************************************************************/
 #include "MKL25Z4.h"
 #include "buzzer.h"
@@ -67,7 +68,7 @@ void buzzer_setup(e_proximity_t e_proximity)
 
 	g_buzzer_on_period = 0;
 
-	if (e_proximity == PROXIMITY_SAFE)
+	if (e_proximity >= PROXIMITY_SAFE)
 		return;
 
 	g_buzzer_on_period = (PROXIMITY_SAFE - e_proximity) * 100;

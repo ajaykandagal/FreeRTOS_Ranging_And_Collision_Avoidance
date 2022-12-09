@@ -245,13 +245,10 @@ static bool set_spads_from_nvm()
 		PRINTF("\n\rget_spad_info_from_nvm failed!");
 		return false;
 	}
-	PRINTF("\n\r%u, %u, %u\n\r", spads_to_enable_count, spad_type, good_spad_map);
 
 	for (int i = 0; i < 6; i++) {
 		total_val += good_spad_map[i];
-		PRINTF("{%u , %u}\t", i, good_spad_map[i]);
 	}
-	PRINTF("\n\r");
 
 	bool success = i2c_write_addr8_data8(0xFF, 0x01);
 	success &= i2c_write_addr8_data8(REG_DYNAMIC_SPAD_REF_EN_START_OFFSET, 0x00);
@@ -271,7 +268,6 @@ static bool set_spads_from_nvm()
 		for (int column = 0; column < SPAD_ROW_SIZE; column++) {
 			int index = (row * SPAD_ROW_SIZE) + column;
 			if (index > SPAD_MAX_COUNT) {
-				PRINTF("\n\rset_spads_from_nvm failed 1!");
 				return false;
 			}
 			if (spads_enabled_count == spads_to_enable_count) {
@@ -293,13 +289,11 @@ static bool set_spads_from_nvm()
 	}
 
 	if (spads_enabled_count != spads_to_enable_count) {
-		PRINTF("\n\rset_spads_from_nvm failed 2!");
 		return false;
 	}
 
 	/* Write the new SPAD configuration */
 	if (!i2c_write_addr8_bytes(REG_GLOBAL_CONFIG_SPAD_ENABLES_REF_0, spad_map, SPAD_MAP_ROW_COUNT)) {
-		PRINTF("\n\rset_spads_from_nvm failed 3!");
 		return false;
 	}
 

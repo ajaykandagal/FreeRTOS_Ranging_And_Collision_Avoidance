@@ -4,16 +4,21 @@
  * 			sensor. The application measures the distance from an obstacle using
  * 			ToF sensor and based on the proximity turns on/off the buzzer.
  *
- * @project	Range Sensing and Collision Avoidance Using ToF Sensor on FreeRTOS
+ * @project	FreeRTOS Ranging and Collision Avoidance
  * @author 	Ajaykumar Kandagal, ajka9053@colorado.edu
  * @data 	Dec 06, 2022
  *
+ * @editor	Dec 09, 2022, Ajay Kandagal, ajka9053@colorado.edu
+ * @change	Changes made to enable/disable testing via macro TESTING defined
+ * 			in common.h
  ******************************************************************************/
 
 
 #include "common.h"
 
-#if TESTING  == 0
+#if TESTING
+#include "main_test.h"
+#else
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -34,10 +39,6 @@
 #include "vl53l0x.h"
 #include "buzzer.h"
 
-
-#if TESTING
-#include "main_test.h"
-#endif
 
 /* Task priorities */
 #define HIGHEST_PRIORITY 			(configMAX_PRIORITIES - 1)
@@ -95,7 +96,9 @@ int main(void)
 	buzzer_init();
 	tof_init();
 
-#if TESTING == 0
+#if TESTING
+	main_test();
+#else
 	/* Create queue to accumulate range data and then give it for processing */
 	tof_sensor_data[0].range_val = xQueueCreate(TOF_RANGE_Q_SIZE, sizeof(uint16_t));
 

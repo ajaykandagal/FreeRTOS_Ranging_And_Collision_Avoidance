@@ -1,38 +1,32 @@
-/*
- * main_test.h
+/*******************************************************************************
+ * @file	main_test.h
+ * @brief 	This file contains functions to test ToF sensor and the buzzer.
  *
- *  Created on: 09-Dec-2022
- *      Author: ajayk
- */
-
+ * @author 	Ajaykumar Kandagal, ajka9053@colorado.edu
+ * @date 	Dec 07, 2022
+ *
+ * @editor	Dec 09, 2022, Ajay Kandagal, ajka9053@colorado.edu
+ * @change	Added test cases for buzzer.
+ ******************************************************************************/
 #ifndef MAIN_TEST_H_
 #define MAIN_TEST_H_
 
 
-#include "tof.h"
-
-
 /*******************************************************************************
- * This test will check the ToF sensor working. To carry out this test ToF
+ * A common call to test both ToF sensor and the buzzer.
+ *
+ * TOF SENSOR TEST
+ * The test will check the ToF sensor working. To carry out this test ToF
  * sensor should be placed at a known distance from the obstacle. Set the macro
  * OBSTACLE_DISTANE_MM with known object distance.
  *
- * @param
- *  idx		Id of ToF sensor to test.
- *
+ * BUZZER TEST
+ * The test will verify the buzzer on period by passing various proximity values.
+ * Next will be hearing based test, the buzzer is played by passing the valid
+ * proximity value. You should be able to able to hear the buzzer with different
+ * on periods.
  ******************************************************************************/
-void test_tof_sensor(vl53l0x_idx_t idx);
-
-
-/*******************************************************************************
- * This is a observation based test. The test will verify the buzzer on period
- * by passing various proximity values and then plays the tone by passing the
- * valid proximity value.
- *
- * Note: You should be able to able to hear the buzzer with different on
- * periods and lastly the buzzer will be played continuously.
- ******************************************************************************/
-void test_buzzer();
+void main_test();
 
 
 #endif /* MAIN_TEST_H_ */

@@ -12,8 +12,8 @@
 #include "MKL25Z4.h"
 
 
-#define DEBUG_LOGS 0
-#define TESTING 0
+#define DEBUG_LOGS 	(0)
+#define TESTING		(0)
 
 
 // Contains number of number of enums in e_proximity_t except PROXIMITY_SAFE

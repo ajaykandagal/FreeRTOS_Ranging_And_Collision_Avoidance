@@ -80,7 +80,7 @@ void i2c_set_slave_address(const uint8_t addr)
  * 	val		Amount a for loop iteration delay to be created.
  *
  ******************************************************************************/
-void delay_ms(uint16_t val)
+void i2c_delay(uint16_t val)
 {
 	for (int i = 0; i < val; i++);
 }
@@ -113,7 +113,7 @@ void i2c_write_write(uint8_t reg_addr, uint8_t *bytes, uint16_t byte_count)
 
 	I2C_Stop();
 
-	delay_ms(50);
+	i2c_delay(50);
 }
 
 
@@ -164,7 +164,7 @@ void i2c_read_read(uint8_t reg_addr, uint8_t *bytes, uint16_t byte_count)
 	I2C_Stop();
 	*bytes = I2C1->D;
 
-	delay_ms(50);
+	i2c_delay(50);
 }
 
 
@@ -187,7 +187,7 @@ uint8_t i2c_write_addr8_data8(uint8_t reg_addr, uint8_t byte)
 
 	I2C_Stop();
 
-	delay_ms(50);
+	i2c_delay(50);
 
 	return 1;
 }
@@ -243,7 +243,7 @@ uint8_t i2c_read_addr8_data8(uint8_t reg_addr, uint8_t *byte)
 	I2C_Wait();
 	I2C_Stop();
 	*byte = I2C1->D;
-	delay_ms(500);
+	i2c_delay(500);
 
 	return 1;
 }
