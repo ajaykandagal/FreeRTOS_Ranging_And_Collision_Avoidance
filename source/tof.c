@@ -69,6 +69,7 @@ vl53l0x_info_t* const get_tof_sensor(vl53l0x_idx_t idx)
 
 /*******************************************************************************
  * PUBLIC FUNCTION
+ *
  * Configures the ToF sensors and initializes their Load Power Management pins
  * and turns on the sensors.
  ******************************************************************************/
@@ -78,10 +79,12 @@ void tof_init()
 
 	i2c_init();
 
-	for (uint8_t i = 0; i < VL53L0X_SENSORS_COUNT; i++) {
+	for (uint8_t i = 0; i < VL53L0X_SENSORS_COUNT; i++)
+	{
 		tof_sensor = get_tof_sensor(i);
 
-		if (tof_sensor != NULL) {
+		if (tof_sensor != NULL)
+		{
 			SIM->SCGC5 |= SIM_SCGC5_PORTE_MASK;
 			PORTE->PCR[tof_sensor->lpm_gpio_pin] &= ~((uint32_t) PORT_PCR_MUX_MASK);
 			PORTE->PCR[tof_sensor->lpm_gpio_pin] |= ((uint32_t) PORT_PCR_MUX(1));
@@ -99,13 +102,15 @@ void tof_init()
 
 /*******************************************************************************
  * PUBLIC FUNCTION: SEE HEADER FOR FULL DESCRIPTION
+ *
  * Gets the range value from the ToF sensor by doing single ranging measurement.
  ******************************************************************************/
 uint16_t tof_get_range(vl53l0x_idx_t idx)
 {
 	vl53l0x_info_t* tof_sensor = get_tof_sensor(idx);
 
-	if (tof_sensor != NULL) {
+	if (tof_sensor != NULL)
+	{
 		uint16_t range;
 		if (vl53l0x_read_range_single(tof_sensor->addr, &range))
 			return range;

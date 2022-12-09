@@ -29,6 +29,7 @@ uint16_t g_buzzer_on_period = 0;
 
 /*******************************************************************************
  * PUBLIC FUNCTION
+ *
  * Initializes TPM1 and selects channel 0 to generate PWM signal on PORTD PIN0.
  ******************************************************************************/
 void buzzer_init()
@@ -53,12 +54,15 @@ void buzzer_init()
 
 /*******************************************************************************
  * PUBLIC FUNCTION: SEE HEADER FOR FULL DESCRIPTION
+ *
  * Enables TPM0 to generate PWM signal and on period of the buzzer based on the
  * proximity measured by the ToF sensor.
  ******************************************************************************/
 void buzzer_setup(e_proximity_t e_proximity)
 {
 	TPM0->SC &= ~TPM_SC_CMOD(1);
+
+	g_buzzer_on_period = 0;
 
 	if (e_proximity == PROXIMITY_SAFE || e_proximity > PROXIMITY_QUITE_CLOSE)
 		return;
@@ -80,6 +84,7 @@ void buzzer_setup(e_proximity_t e_proximity)
 
 /*******************************************************************************
  * PUBLIC FUNCTION
+ *
  * Enables TPM0 to start PWM signal generation and buzzer starts playing the
  * tone.
  ******************************************************************************/
@@ -91,6 +96,7 @@ void buzzer_start()
 
 /*******************************************************************************
  * PUBLIC FUNCTION
+ *
  * Enables TPM0 to stop PWM signal generation and buzzer stops playing the tone.
  ******************************************************************************/
 void buzzer_stop()
@@ -101,6 +107,7 @@ void buzzer_stop()
 
 /*******************************************************************************
  * PUBLIC FUNCTION: SEE HEADER FOR FULL DESCRIPTION
+ *
  * Returns the buzzer on period set by buzzer_setup() based on proximity.
  ******************************************************************************/
 uint16_t get_buzzer_on_period()
@@ -111,6 +118,7 @@ uint16_t get_buzzer_on_period()
 
 /*******************************************************************************
  * PUBLIC FUNCTION: SEE HEADER FOR FULL DESCRIPTION
+ *
  * Returns the buzzer off period set by buzzer_setup() based on proximity.
  ******************************************************************************/
 uint16_t get_buzzer_off_period()

@@ -6,17 +6,20 @@
  *
  * @project	Range Sensing and Collision Avoidance Using ToF Sensor on FreeRTOS
  * @author 	Ajaykumar Kandagal, ajka9053@colorado.edu
- * @data 	Dec 01, 2022
+ * @data 	Dec 08, 2022
  ******************************************************************************/
 
 
+#include "common.h"
+
+#if TESTING  == 0
 /* FreeRTOS kernel includes. */
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include "timers.h"
 #include "semphr.h"
-
+#endif	// TESTING  == 0
 
 /* Freescale includes. */
 #include "fsl_device_registers.h"
@@ -29,8 +32,11 @@
 #include "tof.h"
 #include "vl53l0x.h"
 #include "buzzer.h"
-#include "common.h"
 
+
+#if TESTING
+#include "main_test.h"
+#endif
 
 /* Task priorities */
 #define HIGHEST_PRIORITY 			(configMAX_PRIORITIES - 1)
@@ -40,9 +46,10 @@
 #define TOF2_PROCESS_TASK_PRIORITY 	(HIGHEST_PRIORITY - 1)
 #define WARNING_TASK_PRIORITY 		(HIGHEST_PRIORITY - 2)
 
-#define TOF_RANGE_Q_SIZE		(10)
+#define TOF_RANGE_Q_SIZE			(10)
 
 
+#if TESTING == 0
 /* Application specific variables*/
 typedef struct {
 	uint8_t tof_id;
@@ -70,6 +77,7 @@ static void warning_task(void *pvParameters);
 TaskHandle_t tof_ranging_handle;
 TaskHandle_t tof_process_handle;
 TaskHandle_t warning_handle;
+#endif	// TESTING  == 0
 
 
 /**
@@ -86,6 +94,7 @@ int main(void)
 	buzzer_init();
 	tof_init();
 
+#if TESTING == 0
 	/* Create queue to accumulate range data and then give it for processing */
 	tof_sensor_data[0].range_val = xQueueCreate(TOF_RANGE_Q_SIZE, sizeof(uint16_t));
 
@@ -100,10 +109,13 @@ int main(void)
 			TOF1_SENSOR_TASK_PRIORITY, &warning_handle);
 
 	vTaskStartScheduler();
-	for (;;);
+#endif	// TESTING == 0
+
+	while(1);
 }
 
 
+#if TESTING == 0
 /*******************************************************************************
  * RTOS task for ranging using the ToF sensor.
  *
@@ -134,7 +146,8 @@ static void tof_ranging_task(void *pvParameters)
 		{
 			/* Add VL53L0X_OUT_OF_RANGE data to queue to indicate process task
 			 * that ToF giving out-of-range values so that it can stop the buzzer */
-			if (last_range != VL53L0X_OUT_OF_RANGE) {
+			if (last_range != VL53L0X_OUT_OF_RANGE)
+			{
 				last_range = VL53L0X_OUT_OF_RANGE;
 				if (xQueueSend(tof_sensor_data[0].range_val, (void*)&last_range, 0) != pdTRUE)
 					PRINTF("Queue is full");
@@ -180,7 +193,8 @@ static void tof_process_task(void *pvParameters)
 
 			tof_sensor_data[0].e_proximity = e_proximity;
 
-			if (e_proximity != PROXIMITY_SAFE) {
+			if (e_proximity != PROXIMITY_SAFE)
+			{
 				if (eTaskGetState(warning_handle) == eSuspended)
 					vTaskResume(warning_handle);
 			}
@@ -230,3 +244,4 @@ static void warning_task(void *pvParameters)
 		}
 	}
 }
+#endif	// TESTING == 0

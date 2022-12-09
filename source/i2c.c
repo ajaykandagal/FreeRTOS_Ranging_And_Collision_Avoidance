@@ -37,6 +37,7 @@ uint8_t g_nxp_device_addr = 0x00;
 
 /*******************************************************************************
  * PUBLIC FUNCTION
+ *
  * Initializes I2C1 bus at 400kHz, PORTE PIN0 as SDA and PORTE PIN1 as SCL.
  ******************************************************************************/
 void i2c_init()
@@ -62,6 +63,7 @@ void i2c_init()
 
 /*******************************************************************************
  * PUBLIC FUNCTION
+ *
  * Sets the I2C device address for a session. This function should be called
  * before initiating any I2C communication.
  ******************************************************************************/
@@ -103,7 +105,8 @@ void i2c_write_write(uint8_t reg_addr, uint8_t *bytes, uint16_t byte_count)
 	I2C1->D = reg_addr;									/* Send register address */
 	I2C_Wait();
 
-	for (uint16_t i = 0; i < byte_count; i++) {
+	for (uint16_t i = 0; i < byte_count; i++)
+	{
 		I2C1->D = bytes[i];								/* Send the data */
 		I2C_Wait();
 	}
@@ -167,6 +170,7 @@ void i2c_read_read(uint8_t reg_addr, uint8_t *bytes, uint16_t byte_count)
 
 /*******************************************************************************
  * PUBLIC FUNCTION: SEE HEADER FILE FOR FULL DESCRIPTION
+ *
  * Writes a byte to the given register address over I2C.
  ******************************************************************************/
 uint8_t i2c_write_addr8_data8(uint8_t reg_addr, uint8_t byte)
@@ -191,6 +195,7 @@ uint8_t i2c_write_addr8_data8(uint8_t reg_addr, uint8_t byte)
 
 /*******************************************************************************
  * PUBLIC FUNCTION: SEE HEADER FILE FOR FULL DESCRIPTION
+ *
  * Writes 4 bytes to the given register address over I2C.
  ******************************************************************************/
 uint8_t i2c_write_addr8_data32(uint8_t reg_addr, uint32_t bytes)
@@ -202,6 +207,7 @@ uint8_t i2c_write_addr8_data32(uint8_t reg_addr, uint32_t bytes)
 
 /*******************************************************************************
  * PUBLIC FUNCTION: SEE HEADER FILE FOR FULL DESCRIPTION
+ *
  * Writes give number of bytes to the given register address over I2C.
  ******************************************************************************/
 uint8_t i2c_write_addr8_bytes(uint8_t reg_addr, uint8_t *bytes, uint16_t byte_count)
@@ -213,6 +219,7 @@ uint8_t i2c_write_addr8_bytes(uint8_t reg_addr, uint8_t *bytes, uint16_t byte_co
 
 /*******************************************************************************
  * PUBLIC FUNCTION: SEE HEADER FILE FOR FULL DESCRIPTION
+ *
  * Reads a byte from given register address over I2C.
  ******************************************************************************/
 uint8_t i2c_read_addr8_data8(uint8_t reg_addr, uint8_t *byte)
@@ -244,6 +251,7 @@ uint8_t i2c_read_addr8_data8(uint8_t reg_addr, uint8_t *byte)
 
 /*******************************************************************************
  * PUBLIC FUNCTION: SEE HEADER FILE FOR FULL DESCRIPTION
+ *
  * Reads 2 bytes from given register address over I2C.
  ******************************************************************************/
 uint8_t i2c_read_addr8_data16(uint8_t reg_addr, uint16_t *bytes)
@@ -255,6 +263,7 @@ uint8_t i2c_read_addr8_data16(uint8_t reg_addr, uint16_t *bytes)
 
 /*******************************************************************************
  * PUBLIC FUNCTION: SEE HEADER FILE FOR FULL DESCRIPTION
+ *
  * Reads 4 bytes from given register address over I2C.
  ******************************************************************************/
 uint8_t i2c_read_addr8_data32(uint8_t reg_addr, uint32_t *bytes)
@@ -266,6 +275,7 @@ uint8_t i2c_read_addr8_data32(uint8_t reg_addr, uint32_t *bytes)
 
 /*******************************************************************************
  * PUBLIC FUNCTION: SEE HEADER FILE FOR FULL DESCRIPTION
+ *
  * Reads given number of bytes from given register address over I2C.
  ******************************************************************************/
 uint8_t i2c_read_addr8_bytes(uint8_t reg_addr, uint8_t *bytes, uint16_t byte_count)
