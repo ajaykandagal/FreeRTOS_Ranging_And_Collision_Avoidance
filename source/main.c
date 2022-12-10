@@ -104,13 +104,13 @@ int main(void)
 
 	/* Creating RTOS tasks for ranging */
 	xTaskCreate(tof_ranging_task, "ToF Ranging", configMINIMAL_STACK_SIZE + 10, NULL,
-			WARNING_TASK_PRIORITY, &tof_ranging_handle);
+			TOF1_SENSOR_TASK_PRIORITY, &tof_ranging_handle);
 
 	xTaskCreate(tof_process_task, "ToF Processing", configMINIMAL_STACK_SIZE + 10, NULL,
-			WARNING_TASK_PRIORITY, &tof_process_handle);
+			TOF1_PROCESS_TASK_PRIORITY, &tof_process_handle);
 
 	xTaskCreate(warning_task, "Warning", configMINIMAL_STACK_SIZE + 10, NULL,
-			TOF1_SENSOR_TASK_PRIORITY, &warning_handle);
+			WARNING_TASK_PRIORITY, &warning_handle);
 
 	vTaskStartScheduler();
 #endif	// TESTING == 0
@@ -138,7 +138,9 @@ static void tof_ranging_task(void *pvParameters)
 
 		if (range != VL53L0X_OUT_OF_RANGE)
 		{
+#if DEBUG_LOGS
 			PRINTF("\n\rR: %u",range);
+#endif
 
 			/* Add valid range to queue */
 			if (xQueueSend(tof_sensor_data[0].range_val, (void*)&range, 0) != pdTRUE)
@@ -180,7 +182,9 @@ static void tof_process_task(void *pvParameters)
 	{
 		if (xQueueReceive(tof_sensor_data[0].range_val, (void*)&range_val, portMAX_DELAY) == pdTRUE)
 		{
+#if DEBUG_LOGS
 			PRINTF("\n\rP: %u", range_val);
+#endif
 
 			if (range_val < proximity_slots[PROXIMITY_TOO_CLOSE])
 				e_proximity = PROXIMITY_TOO_CLOSE;
@@ -226,7 +230,9 @@ static void warning_task(void *pvParameters)
 
 		if (e_proximity == PROXIMITY_SAFE)
 		{
+#if DEBUG_LOGS
 			PRINTF("\n\rStopped");
+#endif
 
 			last_e_proximity = PROXIMITY_SAFE;
 			buzzer_stop();
@@ -234,7 +240,9 @@ static void warning_task(void *pvParameters)
 		}
 		else
 		{
+#if DEBUG_LOGS
 			PRINTF("\n\rPlaying");
+#endif
 
 			if (e_proximity !=  last_e_proximity)
 				buzzer_setup(e_proximity);

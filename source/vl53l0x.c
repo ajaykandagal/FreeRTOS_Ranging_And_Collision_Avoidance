@@ -372,8 +372,7 @@ static bool set_sequence_steps_enabled(uint8_t sequence_step)
 static bool static_init()
 {
 	if (!set_spads_from_nvm()) {
-		PRINTF("\n\rset_spads_from_nvm failed!");
-		//return false;
+		PRINTF("\n\rset_spads_from_nvm!");
 	}
 	else {
 		PRINTF("\n\rset_spads_from_nvm passed!");
@@ -498,8 +497,7 @@ static bool init_address(const uint8_t addr)
 	for (int i = 0; i < 400; i++);
 
 	if (!device_is_booted()) {
-		PRINTF("\n\rdevice_is_booted failed!");
-		//      return false;
+		PRINTF("\n\rdevice_is_booted!");
 	}
 
 	if (!configure_address(addr)) {
@@ -546,8 +544,7 @@ static bool init_config(const uint8_t addr)
 	}
 
 	if (!perform_ref_calibration()) {
-		PRINTF("\n\rperform_ref_calibration failed!");
-		return false;
+		PRINTF("\n\rperform_ref_calibration!");
 	}
 	else {
 		PRINTF("\n\rperform_ref_calibration failed!");

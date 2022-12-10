@@ -1,0 +1,41 @@
+Device ID: ff
+device_is_booted!
+init_addresses passed!
+data_init passed!
+set_spads_from_nvm!
+load_default_tuning_settings passed!
+configure_interrupt passed!
+static_init passed!
+perform_ref_calibration failed!
+init_config passed!
+ToF Sensor 0 initialized
+
+***
+Testing ToF Sensor.
+Make sure the sensor is placed at specified distance from obstacle
+
+Testing Completed!
+Passed samples = 94
+Failed samples = 6
+Out of range samples = 0
+Accuracy of sensor (in percent) = 98
+
+***
+Testing Buzzer.
+This tests the buzzer setup function
+        Test case 0 passed
+        Test case 1 passed
+        Test case 2 passed
+        Test case 3 passed
+        Test case 4 passed
+        Test case 5 passed
+        Test case 6 passed
+        Test case 7 passed
+
+Testing Completed!
+All buzzer test cases passed!
+
+***
+
+Now the buzzer will be played at different on/off periods.
+Please check if you can hear the sound

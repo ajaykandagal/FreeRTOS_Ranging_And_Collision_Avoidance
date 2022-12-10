@@ -61,15 +61,12 @@ void test_tof_sensor(vl53l0x_idx_t idx)
 
 		if (range != VL53L0X_OUT_OF_RANGE)
 		{
+			range_average = (range_average + range) / 2;
+
 			if (range >= LOWER_RANGE_OFFSET && range <= UPPER_RANGE_OFFSET)
-			{
-				range_average = (range_average + range) / 2;
 				passed_count++;
-			}
 			else
-			{
 				failed_count++;
-			}
 		}
 		else
 		{
@@ -82,17 +79,20 @@ void test_tof_sensor(vl53l0x_idx_t idx)
 			"\n\rFailed samples = %u"
 			"\n\rOut of range samples = %u", passed_count, failed_count, out_of_range_count);
 
-	uint16_t range_error = 0;
-	uint16_t accuracy = 0;
+	if (passed_count > failed_count && passed_count > out_of_range_count)
+	{
+		uint16_t range_error = 0;
+		uint16_t accuracy = 0;
 
-	if (range_average > OBSTACLE_DISTANE_MM)
-		range_error = (range_average - OBSTACLE_DISTANE_MM);
-	else
-		range_error = (OBSTACLE_DISTANE_MM - range_average);
+		if (range_average > OBSTACLE_DISTANE_MM)
+			range_error = (range_average - OBSTACLE_DISTANE_MM);
+		else
+			range_error = (OBSTACLE_DISTANE_MM - range_average);
 
-	accuracy = 100 - ((range_error / OBSTACLE_DISTANE_MM) * 100);
+		accuracy = 100 - ((range_error * 100 / OBSTACLE_DISTANE_MM));
 
-	PRINTF("\n\rAccuracy of sensor = %u\%", accuracy);
+		PRINTF("\n\rAccuracy of sensor (in percent) = %u", accuracy);
+	}
 
 	if (out_of_range_count > passed_count)
 	{
