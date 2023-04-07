@@ -1,10 +1,7 @@
-# Course Project: FreeRTOS Ranging and Collision Avoidance
-### Code for Course Project for PES, ECEN-5813(B), Fall 2022
+# Project: FreeRTOS Ranging and Collision Avoidance
 ---
 #### **Author:** Ajaykumar Kandagal
-#### **Email-Id:** ajka9053@colorado.edu
-#### **Institution:** University of Colorado Boulder (UCB)
-#### **Instructor:** Lalit Pandit
+#### **Email-Id:** ajaykandagal94@gmail.com
 #### **Description:** This is a FreeRTOS based application for ranging using vl53l0x ToF sensor. The application measures the distance from an obstacle using vl53l0x ToF sensor and based on the proximity turns on/off the buzzer.
 #### **Date:** Dec 09, 2022
 ---
@@ -13,7 +10,6 @@
 * Proof for working of the implementation is placed under Report/Demo
 ---
 ### Status
-* All the functionalities are implemented as it was mentioned in the initial proposal document.
 * I was planning to implement some extra features but due to time contraints I could not carry out them fully hence the code is written to handle two ToF sensors even though current setup uses only one sensor.
 ---
 ### Setup
